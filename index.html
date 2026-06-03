@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Brew & Co. Café – Leave a Review</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      /* ── CAFE THEME — change these for each business ── */
+      --brand:       #92400E;
+      --brand-light: #FEF3C7;
+      --brand-mid:   #D97706;
+      --bg:          #FFFBF5;
+      --card:        #FFFFFF;
+      --text:        #1C1917;
+      --sub:         #78716C;
+      --border:      #E7E5E4;
+      --chip-bg:     #F5F5F4;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg);
+      min-height: 100vh;
+      padding: 0 0 80px;
+    }
+
+    /* ── TOP BANNER ── */
+    .banner {
+      background: linear-gradient(135deg, var(--brand), var(--brand-mid));
+      padding: 28px 20px 36px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .banner::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .logo-wrap {
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.15);
+      border: 3px solid rgba(255,255,255,0.4);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 38px;
+      margin: 0 auto 12px;
+      backdrop-filter: blur(4px);
+    }
+    .biz-name {
+      font-size: 22px; font-weight: 700;
+      color: #fff; letter-spacing: -0.3px;
+    }
+    .biz-tag {
+      font-size: 13px; color: rgba(255,255,255,0.75);
+      margin-top: 4px;
+    }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--card);
+      border-radius: 20px 20px 0 0;
+      margin-top: -16px;
+      padding: 24px 20px;
+      min-height: calc(100vh - 160px);
+    }
+
+    /* ── STARS ── */
+    .stars-row {
+      display: flex; justify-content: center;
+      gap: 6px; margin-bottom: 6px;
+    }
+    .star-btn {
+      background: none; border: none; cursor: pointer;
+      font-size: 36px; padding: 2px; line-height: 1;
+      color: #E5E7EB;
+      transition: color 0.12s, transform 0.12s;
+    }
+    .star-btn.active { color: #F59E0B; }
+    .star-btn:hover  { transform: scale(1.18); }
+    .star-label {
+      text-align: center; font-size: 12px; font-weight: 600;
+      height: 18px; margin-bottom: 20px;
+    }
+
+    /* ── SECTION LABEL ── */
+    .sec-label {
+      font-size: 11px; font-weight: 600; color: var(--sub);
+      text-transform: uppercase; letter-spacing: 0.07em;
+      margin-bottom: 10px;
+    }
+
+    /* ── LANG TOGGLE ── */
+    .lang-row { display: flex; gap: 8px; margin-bottom: 20px; }
+    .lang-btn {
+      padding: 7px 22px; border-radius: 50px; font-size: 13px;
+      font-weight: 500; cursor: pointer; border: 1.5px solid var(--border);
+      background: var(--chip-bg); color: var(--text);
+      font-family: 'Poppins', sans-serif;
+      transition: all 0.15s;
+    }
+    .lang-btn.active {
+      background: var(--brand); color: #fff; border-color: var(--brand);
+    }
+
+    /* ── KEYWORD CHIPS ── */
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+    .chip {
+      padding: 7px 14px; border-radius: 50px; font-size: 12px;
+      font-weight: 400; cursor: pointer;
+      border: 1.5px solid var(--border);
+      background: var(--chip-bg); color: var(--text);
+      font-family: 'Poppins', sans-serif;
+      transition: all 0.15s;
+    }
+    .chip.active {
+      background: var(--brand); color: #fff;
+      border-color: var(--brand); font-weight: 600;
+    }
+    .chip.more-btn {
+      border-style: dashed; background: transparent; color: var(--sub);
+    }
+
+    /* ── REVIEW BOX ── */
+    .review-box {
+      min-height: 90px;
+      background: var(--chip-bg);
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      padding: 14px 16px;
+      margin-bottom: 14px;
+      position: relative;
+    }
+    .review-text {
+      font-size: 14px; line-height: 1.7; color: var(--text);
+    }
+    .review-placeholder {
+      font-size: 13px; color: #C4C9D4; font-style: italic;
+    }
+    .review-meta {
+      display: flex; justify-content: space-between;
+      align-items: center; margin-top: 10px;
+    }
+    .review-stars-mini { font-size: 12px; font-weight: 600; color: var(--brand); }
+    .review-actions { display: flex; gap: 12px; }
+    .mini-btn {
+      background: none; border: none; cursor: pointer;
+      font-size: 12px; color: var(--sub);
+      font-family: 'Poppins', sans-serif;
+    }
+    .review-edit {
+      width: 100%; border: none; background: transparent;
+      font-size: 14px; line-height: 1.7; color: var(--text);
+      font-family: 'Poppins', sans-serif;
+      resize: none; outline: none; min-height: 70px;
+    }
+
+    /* ── SPINNER ── */
+    .spinner-row {
+      display: flex; align-items: center; gap: 8px; color: var(--sub);
+    }
+    .spinner {
+      width: 14px; height: 14px;
+      border: 2px solid var(--border);
+      border-top-color: var(--brand);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      flex-shrink: 0;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── BUTTONS ── */
+    .btn-primary {
+      width: 100%; padding: 14px;
+      border-radius: 14px; border: none;
+      background: var(--brand); color: #fff;
+      font-size: 15px; font-weight: 700;
+      cursor: pointer; font-family: 'Poppins', sans-serif;
+      margin-bottom: 10px; letter-spacing: 0.01em;
+      transition: opacity 0.2s, transform 0.1s;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .btn-primary:disabled { background: #E5E7EB; color: #9CA3AF; cursor: not-allowed; }
+    .btn-primary:not(:disabled):active { transform: scale(0.98); }
+    .btn-secondary {
+      width: 100%; padding: 12px;
+      border-radius: 14px; border: 1.5px solid var(--border);
+      background: #fff; color: var(--text);
+      font-size: 13px; font-weight: 500;
+      cursor: pointer; font-family: 'Poppins', sans-serif;
+      transition: all 0.2s;
+    }
+    .btn-secondary:disabled { color: #C4C9D4; cursor: not-allowed; }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed; bottom: 28px; left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: #111827; color: #fff;
+      padding: 10px 22px; border-radius: 12px;
+      font-size: 13px; font-weight: 500;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      transition: transform 0.3s ease;
+      z-index: 999; white-space: nowrap;
+      pointer-events: none;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+    .footer {
+      text-align: center; font-size: 11px;
+      color: #D1D5DB; margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── BANNER ── -->
+<div class="banner">
+  <div class="logo-wrap">☕</div>
+  <div class="biz-name">Brew &amp; Co. Café</div>
+  <div class="biz-tag">Specialty Coffee · Surat, Gujarat</div>
+</div>
+
+<!-- ── CARD ── -->
+<div class="card">
+
+  <!-- Stars -->
+  <div class="stars-row" id="starsRow"></div>
+  <div class="star-label" id="starLabel" style="color:#9CA3AF">Tap a star to begin</div>
+
+  <!-- Language -->
+  <div class="sec-label">✦ Language</div>
+  <div class="lang-row">
+    <button class="lang-btn active" onclick="setLang('English')">English</button>
+    <button class="lang-btn" onclick="setLang('Gujarati')">Gujarati</button>
+  </div>
+
+  <!-- Keywords -->
+  <div class="sec-label">✦ Highlight a Service</div>
+  <div class="chips" id="chipsContainer"></div>
+
+  <!-- Review Box -->
+  <div class="review-box" id="reviewBox">
+    <div class="review-placeholder" id="placeholder">Rate first, then pick a keyword…</div>
+  </div>
+
+  <!-- Buttons -->
+  <button class="btn-primary" id="btnPost" disabled onclick="copyAndPost()">
+    🔗 Copy &amp; Post to Google
+  </button>
+  <button class="btn-secondary" id="btnRegen" disabled onclick="regenerate()">
+    ✦ Regenerate
+  </button>
+</div>
+
+<div class="footer">Powered by ezyreview</div>
+<div class="toast" id="toast"></div>
+
+<script>
+// ── CONFIG — edit this for each business ──────────────────────────────────────
+const BIZ = {
+  name:       "Brew & Co. Café",
+  tagline:    "Specialty Coffee · Surat, Gujarat",
+  googleUrl:  "https://maps.google.com", // ← paste actual Google review link
+  keywords: [
+    "Amazing coffee", "Cozy ambiance", "Great wifi",
+    "Delicious snacks", "Friendly baristas", "Perfect for work",
+    "Fresh pastries", "Quick service", "Quiet atmosphere",
+    "Best cappuccino", "Instagrammable decor", "Perfect for dates"
+  ]
+};
+
+const STAR_COLORS = ["","#EF4444","#F97316","#EAB308","#16A34A","#15803D"];
+const STAR_LABELS = ["","Poor 😔","Below average","Average 😐","Good 😊","Excellent! 🎉"];
+const TONES      = ["","very disappointed","a bit let down","okay, neutral","happy and impressed","absolutely delighted"];
+
+// ── STATE ─────────────────────────────────────────────────────────────────────
+let stars    = 0;
+let lang     = "English";
+let selected = [];
+let showMore = false;
+let review   = "";
+let loading  = false;
+let editMode = false;
+let history  = {};
+
+// ── RENDER STARS ──────────────────────────────────────────────────────────────
+const starsRow = document.getElementById("starsRow");
+for (let i = 1; i <= 5; i++) {
+  const b = document.createElement("button");
+  b.className = "star-btn"; b.textContent = "★"; b.dataset.v = i;
+  b.onclick = () => setStar(i);
+  starsRow.appendChild(b);
+}
+
+function setStar(s) {
+  stars = s;
+  document.querySelectorAll(".star-btn").forEach(b => {
+    b.classList.toggle("active", +b.dataset.v <= s);
+  });
+  const lbl = document.getElementById("starLabel");
+  lbl.textContent = STAR_LABELS[s]; lbl.style.color = STAR_COLORS[s];
+  if (selected.length) triggerGenerate();
+  updateButtons();
+}
+
+// ── LANGUAGE ──────────────────────────────────────────────────────────────────
+function setLang(l) {
+  lang = l;
+  document.querySelectorAll(".lang-btn").forEach(b => {
+    b.classList.toggle("active", b.textContent.trim() === l);
+  });
+  if (stars && (selected.length || review)) triggerGenerate();
+}
+
+// ── RENDER CHIPS ─────────────────────────────────────────────────────────────
+function renderChips() {
+  const c = document.getElementById("chipsContainer");
+  c.innerHTML = "";
+  const visible = showMore ? BIZ.keywords : BIZ.keywords.slice(0, 6);
+  visible.forEach(kw => {
+    const b = document.createElement("button");
+    b.className = "chip" + (selected.includes(kw) ? " active" : "");
+    b.textContent = kw;
+    b.onclick = () => toggleKeyword(kw);
+    c.appendChild(b);
+  });
+  if (BIZ.keywords.length > 6) {
+    const b = document.createElement("button");
+    b.className = "chip more-btn";
+    b.textContent = showMore ? "▲ Less" : `+${BIZ.keywords.length - 6} More`;
+    b.onclick = () => { showMore = !showMore; renderChips(); };
+    c.appendChild(b);
+  }
+}
+renderChips();
+
+function toggleKeyword(kw) {
+  selected = selected.includes(kw) ? selected.filter(k => k !== kw) : [...selected, kw];
+  renderChips();
+  if (stars) triggerGenerate();
+}
+
+// ── REVIEW BOX ───────────────────────────────────────────────────────────────
+function renderBox() {
+  const box = document.getElementById("reviewBox");
+  if (loading) {
+    box.innerHTML = `<div class="spinner-row"><div class="spinner"></div><span style="font-size:13px;font-style:italic;color:#9CA3AF">Generating your review…</span></div>`;
+    return;
+  }
+  if (editMode) {
+    box.innerHTML = `<textarea class="review-edit" id="editArea" rows="3">${review}</textarea>`;
+    return;
+  }
+  if (review) {
+    box.innerHTML = `
+      <div class="review-text">"${review}"</div>
+      <div class="review-meta">
+        <span class="review-stars-mini">${"★".repeat(stars)}${"☆".repeat(5-stars)}</span>
+        <div class="review-actions">
+          <button class="mini-btn" onclick="copyOnly()">📋 Copy</button>
+          <button class="mini-btn" onclick="startEdit()">✎ Edit</button>
+        </div>
+      </div>`;
+    return;
+  }
+  box.innerHTML = `<div class="review-placeholder">${!stars ? "Rate first, then pick a keyword…" : "Pick a keyword above…"}</div>`;
+}
+
+function startEdit() {
+  editMode = true; renderBox();
+}
+
+function getReview() {
+  if (editMode) {
+    const el = document.getElementById("editArea");
+    return el ? el.value : review;
+  }
+  return review;
+}
+
+// ── GENERATE ─────────────────────────────────────────────────────────────────
+async function triggerGenerate() {
+  if (!stars) return;
+  loading = true; editMode = false;
+  renderBox(); updateButtons();
+
+  const key = `${stars}_${lang}_${[...selected].sort().join(",")}`;
+  const prev = history[key] || [];
+  const avoid = prev.length ? `Do NOT repeat: ${prev.slice(-3).join(" | ")}` : "";
+  const langNote = lang === "Gujarati" ? "Write in Gujarati script only." : "Write in English.";
+  const kws = selected.length ? selected.join(", ") : "overall experience";
+
+  const prompt = `Write a Google review for "${BIZ.name}" (${BIZ.tagline}).
+Feeling: ${TONES[stars]} — ${stars} star${stars>1?"s":""}.
+Highlighted: ${kws}.
+${langNote}
+${avoid}
+RULES: Exactly 2 sentences. Casual and genuine. Mention 1 keyword naturally. No hashtags, no emojis, no quotes.
+Return ONLY the review text.`;
+
+  try {
+    const res  = await fetch("/api/generate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prompt })
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+    review = data.text || "";
+    history[key] = [...(history[key] || []), review];
+  } catch(e) {
+    showToast("Error. Please try again.");
+    review = "";
+  }
+
+  loading = false; renderBox(); updateButtons();
+}
+
+function regenerate() { if (stars) triggerGenerate(); }
+
+// ── COPY & POST ───────────────────────────────────────────────────────────────
+function copyOnly() {
+  const r = getReview();
+  if (!r) return;
+  navigator.clipboard.writeText(r).catch(()=>{});
+  showToast("✓ Copied!");
+}
+
+function copyAndPost() {
+  const r = getReview();
+  if (!r) return;
+  navigator.clipboard.writeText(r).catch(()=>{});
+  showToast("✓ Copied! Opening Google…");
+  setTimeout(() => window.open(BIZ.googleUrl, "_blank"), 1000);
+}
+
+// ── BUTTONS STATE ─────────────────────────────────────────────────────────────
+function updateButtons() {
+  const hasReview = !!review || editMode;
+  document.getElementById("btnPost").disabled  = !hasReview || loading;
+  document.getElementById("btnRegen").disabled = !stars || loading;
+}
+
+// ── TOAST ─────────────────────────────────────────────────────────────────────
+function showToast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg; t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), 2500);
+}
+</script>
+</body>
+</html>
