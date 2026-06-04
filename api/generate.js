@@ -16,39 +16,42 @@ export default async function handler(req, res) {
   }
 
   // Check if API key exists
-  if (!process.env.CLAUDE_API_KEY) {
+  if (!process.env.GEMINI_API_KEY) {
     return res.status(500).json({
-      error: "CLAUDE_API_KEY environment variable not found"
+      error: "GEMINI_API_KEY environment variable not found"
     });
   }
 
   try {
-    // Call Claude API
-    const response = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: {
-        "x-api-key": process.env.CLAUDE_API_KEY,
-        "anthropic-version": "2023-06-01",
-        "content-type": "application/json"
-      },
-      body: JSON.stringify({
-        model: "claude-3-5-sonnet-20241022",
-        max_tokens: 300,
-        messages: [
-          {
-            role: "user",
-            content: prompt
+    // Call Gemini API
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          contents: [
+            {
+              parts: [
+                { text: prompt }
+              ]
+            }
+          ],
+          generationConfig: {
+            maxOutputTokens: 300
           }
-        ]
-      })
-    });
+        })
+      }
+    );
 
     // Parse response
     const data = await response.json();
 
     // Log for debugging
-    console.log("Claude Status:", response.status);
-    console.log("Claude Response:", JSON.stringify(data));
+    console.log("Gemini Status:", response.status);
+    console.log("Gemini Response:", JSON.stringify(data));
 
     // Check for errors
     if (!response.ok) {
@@ -59,7 +62,7 @@ export default async function handler(req, res) {
 
     // Extract text from response
     const text =
-      data.content?.[0]?.text?.trim() ||
+      data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() ||
       "No response generated.";
 
     // Return success response
